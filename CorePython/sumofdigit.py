@@ -1,0 +1,9 @@
+x=int(input("Enter digit for sum\n"))
+z=x;
+s=0
+y=0
+while x!=0:
+    y=x%10
+    s=s+y
+    x=x//10
+print("sum of {}={}".format(z,s))    
