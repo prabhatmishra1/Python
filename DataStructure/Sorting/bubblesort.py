@@ -16,7 +16,7 @@ def modified_bubble_sort():
         if (flag==False):
             return 
         for j in range(len(l)-1):
-            if l[j]>l[j+1]:
+            if l[j]<l[j+1]:
                flag=True 
                l[i],l[j+1]=l[j+1],l[i]        
     return l     
