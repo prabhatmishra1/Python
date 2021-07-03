@@ -1,4 +1,6 @@
 class BinaryTree:
+    '''It includes about Binary tree and traversal 
+    techniques like inorder,posstorder, preorder '''
     def __init__(self,data) -> None:
         self.left=None
         self.data=data
