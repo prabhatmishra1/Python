@@ -1,0 +1,28 @@
+{
+    "Property info": [
+        {
+            "name": "Property 1",
+            "Address": "Address",
+            "comments": [
+                "comment1",
+                "comments2"
+            ],
+            "images": [
+                "image1",
+                "image2"
+            ]
+        },
+        {
+            "name": "Property 2",
+            "Address": "Address",
+            "comments": [
+                "comment1",
+                "comments2"
+            ],
+            "images": [
+                "image1",
+                "image2"
+            ]
+        }
+    ]
+}

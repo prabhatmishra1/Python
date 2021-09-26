@@ -10,9 +10,9 @@ class LinkedList:
 
     def addatbeg(self,value):
         newnode=Node(value)
-        newnode.next=self.start 
-        self.start=newnode    
-    
+        newnode.next=self.start
+        self.start=newnode
+
     def addatend(self,value):
         newnode=Node(value)
         if self.start ==None:
@@ -20,14 +20,14 @@ class LinkedList:
         else:
             temp=self.start
             while temp.next!=None:
-                temp=temp.next 
+                temp=temp.next
             temp.next=newnode
 
     def addafter(self,value,item):
         if self.start ==None:
             print("\nEmpty list cant add")
             return
-        else:    
+        else:
             newnode=Node(item)
             value_founded=False
             p=self.start
@@ -38,16 +38,16 @@ class LinkedList:
                    temp=p.next
                    p.next=newnode
                    newnode.next=temp
-                   value_founded=True 
+                   value_founded=True
                    break
-                p=p.next    
+                p=p.next
             if (not value_founded):
                 print("\n{} not found in the list".format(value))
 
     def addbefore(self,item,value):
         if self.start==None:
             print("EmptyList")
-            return 
+            return
         p=self.start
         while p.next!=None:
             if p.next.data==item:
@@ -55,7 +55,7 @@ class LinkedList:
                 newnode.next=p.next
                 p.next=newnode
                 return
-            p=p.next    
+            p=p.next
         print("\n{} not found".format(item))
 
     def addatpos(self,pos,value):
@@ -75,12 +75,12 @@ class LinkedList:
                 return
             p=p.next
             cnt+=1
-        print("\npos {} does not exists".format(pos))    
+        print("\npos {} does not exists".format(pos))
 
     def deleteatbeg(self):
         if self.start==None:
             print("Empty list")
-            return 
+            return
         self.start=self.start.next
 
     def deleteatend(self):
@@ -89,16 +89,16 @@ class LinkedList:
             return
         elif self.start.next==None:
             self.start=None
-            return     
+            return
         temp=self.start
         while temp.next.next:
             temp=temp.next
-        temp.next=None    
-        
+        temp.next=None
+
     def deleteatpos(self,pos):
         if not self.start:
             print("Empty List")
-            return    
+            return
         if pos==1:
             self.deleteatbeg()
             return
@@ -128,13 +128,13 @@ class LinkedList:
         pos=0
         while temp!=None:
             pos+=1
-            temp=temp.next                
+            temp=temp.next
         return pos
 
     def sort_list(self):
         if self.start==None:
-            return "Empty list"    
-        p=self.start    
+            return "Empty list"
+        p=self.start
         for _ in range(1,self.get_length()):
             while p.next!=None:
                 if p.data>p.next.data:
@@ -142,7 +142,7 @@ class LinkedList:
                     p.data=p.next.data
                     p.next.data=temp
                     #print(temp.data)
-                p=p.next      
+                p=p.next
             p=self.start
 
     def reverse_lit(self):
@@ -150,12 +150,12 @@ class LinkedList:
             print("Empty List")
             return
         p=self.start
-        prev=None    
+        prev=None
         while p:
             nex=p.next
             p.next=prev
             prev=p
-            p=nex             
+            p=nex
         self.start=prev
 
     def add_values(self,l):
@@ -172,11 +172,11 @@ class LinkedList:
             print("Node list are:")
             while temp!=None:
                 print(temp.data,end=' ')
-                temp=temp.next           
+                temp=temp.next
             print()
     def take_input(self):
            return input("Enter a value: ")
-   
+
 
 if __name__ == "__main__":
     print("******Welcome to Linked List Program**********")
@@ -208,7 +208,7 @@ if __name__ == "__main__":
         elif n==3:
             obj.showlist()
         elif n==4:
-            exit() 
+            exit()
         elif n==5:
             value=input("Enter the node: ")
             item=input("Enter the value: ")
@@ -219,7 +219,7 @@ if __name__ == "__main__":
             item=input("Enter the value: ")
             obj.addafter(value,item)
         elif n==7:
-            obj.deleteatbeg()    
+            obj.deleteatbeg()
         elif n==8:
             obj.deleteatend()
         elif n==9:
@@ -240,9 +240,8 @@ if __name__ == "__main__":
         elif n==13:
             obj.sort_list()
         elif n==14:
-            obj.reverse_lit()           
+            obj.reverse_lit()
         else:
-            print("invalid input ")             
-    
-    
-    
+            print("invalid input ")
+
+
