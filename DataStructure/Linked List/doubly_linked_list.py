@@ -4,6 +4,15 @@ class Node:
         self.data = data
         self.next = None
 
+def is_empty_head(func):
+    def inner(head):
+        if not head:
+            print("Empty List")
+        else:
+            func(head)
+    return inner  #calling hear
+
+@is_empty_head
 def display(head):
     ptr = head
     while ptr:
