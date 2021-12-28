@@ -3,7 +3,7 @@ def divide_by_zero(func):
         if b == 0:
             return "Opss cant divide"
         else:
-            func(a,b)
+           return  func(a,b)
     return inner
 
 @divide_by_zero

@@ -19,72 +19,91 @@ if not os.path.exists(input_folder):
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-REPLACEMENT_DICT = {
-    '{FULL NAME}': 'JOHN TURNE',
-    '{number1}': '1234567890000000000000',
-    '{number2}': 'AA123456',
-    '{date11111}': '17/12/2021'
-}
+# This list is just for example and defines the input according to pdf
+REPLACEMENT_LIST = [
+    #input for TEST PDF INPUT TEMPLATE.pdf
+     {'{FULL NAME}': 'Prabahat','{number1}': '1234567890','{number2}': 'AA123456','{date11111}': '17/12/2021'},
+    #input for 4_giberish template.pdf
+     {'FULLNAME}': 'JLKSD', '{PASSPORT}': 'JFDSKLFHSDLK', '{GENDER}': 'Male', '{DATE3}': '20.09.2021', '{DATE4}': '20.09.2020'},
+    #input for 3_giberish template.pdf
+     {'{str1}': 'XXX', '{str2}': 'xxx', '{str3}': 'xxx', '{str4}': 'xxx', '{str5}': 'xxx', '{DATE2}': '12.04.1197', '{A}': 'x', '{B}': 'x','{C}': 'C', '{STR5553}': 'xxx', '{DOB21}': 'xxx', '{J}': 'x', '{H}': 'h', '{STR88888}': 'xxx', '{STR3335}': 'xxx', '{CODE}': 'xxx', '{SOMENR}': 'xxx', '{DATEREGNR}': 'xxx'},
+    #input for string and tables.pdf
+     {'{28698}': '289023', '{06092021}': '2692121', '{01SSS}': '01CCC','{2345890}': '23456890', '{759478229}': '759478221'}
+
+]
+
+# This is just for example to pass images accroding to pdf
+
+REPLACEMENT_IMG_LIST = [
+    # input for TEST PDF INPUT TEMPLATE.pdf
+    {'Im1': 'mainqr.png'},
+    #img for 4_giberish template.pdf
+    {'Im1': 'qr.png', 'Im2': 'mainqr.png'},
+    #input for 3_giberish template.pdf
+    {'Im1': '1.png', 'Im2': '3.png', 'Im3': 'bar.png','Im4': 'mainqr.png', 'Im0': '5.png'},
+    #input for strings and tables.pdf
+    {'Im1': 'mainqr.png'},
+]
 
 # DEFINE COLORS
-white = getColor("whitesmoke")
-blue = (0, 0,.6)
+white = (1, 1, 1)
+black = (0, 0, 0)
+blue = (0, 0, 0.6)
 
-def process_pdf(doc, image_filename=None):
-    output_filename = 'result.pdf'
+
+def process_pdf(doc,doc_name, images_filename=None, bg_image_filename=None,REPLACEMENT_DICT=None):
+    output_filename = doc_name+'_output.pdf'
     output_file_path = os.path.join(current_path, 'output', output_filename)
-    replace_image_path = os.path.join(current_path, 'assets', 'QR.jpg')
     # now read the page
-    page = doc.loadPage(0)
-    # Text align value
-    text_align = TEXT_ALIGN_CENTER
-    #TEXT REPLACEMENT
-    for rep_key, rep_value in REPLACEMENT_DICT.items():
-        text_instances = page.searchFor(rep_key)
-        for inst in text_instances:
-                    #Customization ACC to KEY
-                    if rep_key == '{number1}':
-                        rect = fitz.Rect(inst.x0-400, inst.y0+2, inst.x1, inst.y1+2)
-                        text_align = TEXT_ALIGN_RIGHT
-                    elif rep_key == '{FULL NAME}' :
-                        rect = fitz.Rect(inst.x0-170, inst.y0+2, inst.x1+170, inst.y1+2)
-                    else:
-                        rect = fitz.Rect(inst.x0-18, inst.y0+2, inst.x1+18, inst.y1+2)
-                        text_align = TEXT_ALIGN_CENTER
+    # page = doc.loadPage(0)
+    for page in doc:
+        #TEXT REPLACEMENT
+        for rep_key, rep_value in REPLACEMENT_DICT.items():
+            text_instances = page.searchFor(rep_key)
+            for inst in text_instances:
+                # Get text color, font and size here
+                try:
+                    text_info = page.get_text('dict', clip=inst)['blocks'][0]['lines'][0]['spans'][0]
+                except IndexError:
+                    pass
+                text_info_dict = {
+                    'fontsize': text_info.get('size',12),
+                    'border_width':1,
+                    'color':fitz.sRGB_to_pdf(text_info.get('color', black)),
+                    # 'align': TEXT_ALIGN_CENTER
 
-                    #Delete text
-                    annot = page.addRedactAnnot(rect)
-                    # if you want to make sure to keep overlapping images:
-                    page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE)
-                    page.insert_textbox(rect,rep_value, fontsize=12,
-                    border_width=1, color=blue,align=text_align)
+                }
+                # Customzing rect value
+                rect = fitz.Rect(inst.x0-fitz.getTextlength(rep_value) /
+                                4, inst.y0+2, inst.x1, inst.y1+2)
+                #Delete text
+                annot = page.addRedactAnnot(rect)
+                # if you want to make sure to keep overlapping images:
+                page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_REMOVE)
+                # Insert text here
+                page.insert_textbox(rect,rep_value, **text_info_dict)
 
-    # add QR image on top center
-    qr_image_filename = 'centerqr.png'
-    qr_insert_image_path = os.path.join(current_path, 'assets', qr_image_filename)
+        # Check for the top layer Images
+        if images_filename:
+            # Insert Image:
+            ImageList = sorted(page.get_images(full=True))
+            for img in ImageList:
+                img_rect = page.getImageBbox(img)
+                # Lets check rep image in images dict first:
+                if img[7] in images_filename:
+                    page.addRedactAnnot(rect, text=" ")
+                    page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_REMOVE)
+                    replace_image_path = os.path.join(
+                    current_path, 'assets', images_filename[img[7]])
+                    page.insertImage(img_rect, filename=replace_image_path)
+        if bg_image_filename:
+            # insert background image to the full page
+            full_page_image_path = os.path.join(
+                current_path, 'assets', bg_image_filename)
+            page.insertImage(page.rect,
+                            filename=full_page_image_path, overlay=False
+                            )
 
-    # define the position (upper-center)
-    qr_image_rectangle = fitz.Rect(270, 10,340,70)
-    page.insertImage(qr_image_rectangle, filename=qr_insert_image_path)
-
-   # insert background image to the pull page
-    full_page_image_path = os.path.join(current_path, 'assets', 'background.png')
-    full_img_rect = fitz.Rect(0,0,612,792)
-    page.insertImage(full_img_rect, filename=full_page_image_path, overlay=False)
-
-    # Check for Image
-    if image_filename:
-        # Insert Image:
-        replace_image_path = os.path.join(current_path, 'assets', image_filename)
-        # Get the rect dynamically here
-        img_list = doc.getPageImageList(0, full=True)  # important: use 'full' parameter
-        item = img_list[0] #fetch first image rect in the page
-        img_rect = page.getImageBbox(item)
-        shape = page.newShape()  # create Shape
-        shape.draw_rect(img_rect)
-        shape.finish(color = white, fill = white)
-        shape.commit()
-        page.insertImage(img_rect, filename=replace_image_path)
 
     # save final doc here
     doc.save(output_file_path, garbage=4, deflate=True, clean=True)
@@ -92,14 +111,27 @@ def process_pdf(doc, image_filename=None):
 if __name__ == "__main__":
     # Get the pdf file
     #define your input path here
-    # input_filename = 'TEST PDF INPUT TEMPLATE.pdf'
+    '''input_filename = TEST PDF INPUT TEMPLATE.pdf, 3_giberish template.pdf,
+    4_giberish template.pdf '''
+
     input_filename =   input('\nInput the PDF file name: ')
-    ask_for_image = input('\n Do you want to replace the image ? \n Enter yes or no: ')
-    if (ask_for_image == 'yes'):
-        image_filename = input('\nInput the Image file name: ')
-    else:
-        image_filename = None
+    doc_name = input_filename.split('.pdf')[0]
+    REPLACEMENT_DICT = eval(input('\nEnter the replacement dict: '))
+    # For e.g {'FX462582': 'FX462581','4327974399': '4327974398'},
+
+    #  Take the top layer images
+    ask_for_image = input('\n Do you want to replace the images ? \n Enter yes or no: ').strip().lower()
+    images_filename = eval(input('\nInput the dict of images: ').strip()) if ask_for_image == "yes" else None
+
+    # Take the background image here
+    ask_for_bg_image = input('\n Do you want to add the background image ? \n Enter yes or no: ')
+    bg_image_filename = input('\nInput the background image file name: ') if ask_for_bg_image == 'yes' else None
     input_file = os.path.join(current_path, 'input', input_filename)
 
     doc = fitz.open(input_file)  # open document
-    process_pdf(doc, image_filename = image_filename)
+    process_pdf(doc, doc_name, images_filename=images_filename,
+    REPLACEMENT_DICT=REPLACEMENT_DICT,
+    bg_image_filename = bg_image_filename,
+    )
+    print("=======================================\n")
+    print("PDF Updated Successfully................")

@@ -37,6 +37,29 @@ def addatend(head, data):
         ptr.next = newnode
         newnode.prev = ptr
         return head
+def addatsorted(head, data):
+    newnode = Node(data)
+    # if head is empty head
+    if not head:
+        return newnode
+    else:
+        ptr = head
+        while ptr.next and  ptr.data < newnode.data:
+                ptr = ptr.next
+
+
+        # Check if this is the last node:
+        # print(ptr.data)
+        if not ptr.next and ptr.data < newnode.data:
+            ptr.next = newnode
+            newnode.prev = ptr
+            return head
+        ptr.prev.next = newnode
+        newnode.next = ptr
+        newnode.prev = ptr.prev
+        ptr.prev = newnode
+        return head
+
 
 def create_doubly_linked_list():
     head = Node(10)
@@ -50,6 +73,12 @@ def create_doubly_linked_list():
 if __name__ == '__main__':
     head = create_doubly_linked_list()
     # head = addatbeg(head, 5)
-    head  = addatend(head, 40)
-    head = addatend(head, 50)
+    # head  = addatend(head, 40)
+    head = None
+
+    head = addatsorted(head,15)
+    head = addatsorted(head, 16)
+    head = addatsorted(head,12)
+    head = addatsorted(head, 22)
+    head = addatsorted(head, 31)
     display(head)
