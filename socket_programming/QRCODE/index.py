@@ -25,6 +25,7 @@ def decode_qr(img):
     value, point, qr =  d.detectAndDecode(cv2.imread(img))
     print(value)
 if __name__ == "__main__":
-   generate_qr(obj='00099-01-09', output_filename='QR4.png')
-   print("decoding.......")
-#    decode_qr('test.png')
+   generate_qr(obj='8300016', output_filename='Scottijohn_Test.png')
+   print("done")
+#    print("decoding.......")
+#    decode_qr('D:\python\socket_programming\QRCODE\output\mrn.png')
