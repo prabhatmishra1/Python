@@ -10,8 +10,6 @@ STEP-2: The idea is when swapping in not happing it means array is sorted only
 STEP-3: Once you know swapping is not happing break the inner loop
 STEP-4 Keep on flag variable(swapped=False) which will tell us about array swapping
 """
-
-
 def optimized_bubble_sort(arr):
     n = len(arr)
     for _round in range(n-1): #bcz last value will get sorted auto only

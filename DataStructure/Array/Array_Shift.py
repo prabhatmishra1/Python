@@ -6,5 +6,5 @@ def left_rotate(arr,n):
         arr[i+1]=temp
         n-=1
 arr=[1,2,3,4,5]
-left_rotate(arr,10)
+left_rotate(arr,1)
 print(arr)
