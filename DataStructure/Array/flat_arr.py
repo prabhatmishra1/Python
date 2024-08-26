@@ -5,14 +5,14 @@ output = []
 # lists in python using recursion
 
 
-def reemovNestings(l):
+def removeNestings(l):
     for i in l:
         if isinstance(i, list):
-            reemovNestings(i)
+            removeNestings(i)
         else:
             output.append(i)
 
-            
+
 
 
         
