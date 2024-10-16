@@ -1,16 +1,22 @@
 def sayBye(func):
+    # accept all the parameters which is passed to main function
     def inner(name, data):
-        print(name,data)
         if name == 'sunny':
-            print(f'Bye {name}')
+            return func(f'Bye {name}', data)
         else:
-            func(name,data)  #call normal function
+            return func(name, data)  #call normal function
+    # print("inner", inner)
     return inner
+
+
+# Add decorator
 @sayBye
-def sayHi(name,data):
-    print(f'Hi {name}')
+def sayHi(name, data):
+    return f'Hi {name}'
 
 
 if __name__ == '__main__':
-   fun = sayBye(sayHi("sunny",10))
-   print(fun.__name__)
+    # First approach to call the function
+    sayHi("sunny", 10)
+    # fun = sayBye(sayHi("sunny",10))
+
