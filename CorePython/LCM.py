@@ -1,5 +1,5 @@
 # write a python script to find LCM.
-print("Enter two number:");
+print("Enter two number:")
 a=int(input())
 b=int(input())
 

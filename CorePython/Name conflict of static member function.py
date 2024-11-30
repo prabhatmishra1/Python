@@ -8,7 +8,7 @@ class child(parent):
     def fun(a):#method hiding if argument are not same.
         print("child class",a)
         parent.fun()
-    
+
 obj=child()
 obj.fun(10)
-    
+

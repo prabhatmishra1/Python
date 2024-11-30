@@ -74,6 +74,22 @@ def  mergeAlternately(word1, word2):
 
     print("".join(output))
 
+
+# Third Approach
+def  mergeAlternately(word1, word2):
+    """
+    This approach is based on string slicing
+    """
+    len_word1 = len(word1)
+    output = list()
+    for index in range(len_word1):
+            output.append(word1[index] if word1[index:index+1] else "")
+            output.append(word2[index] if word2[index:index+1] else "")
+    else:
+        output.append(word2[index+1::])
+
+    print("".join(output))
+
 if __name__ == "__main__":
     #TestCase: 1
     mergeAlternately("abc", "pqr")

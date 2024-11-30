@@ -55,4 +55,13 @@ print(l)
 
 # print(sum(first_n(n=10000)))
 
+"""
+Now lets understand what next does here?
 
+Signature: next(iterator, default=some_value)
+So next() is a function which take two argument this first is iterator and second is default
+where if value not found in the iterator it will return the default value
+"""
+
+result = next(iter([value for value in range(10) if value==9 ]), "Not Found")
+print(result)
